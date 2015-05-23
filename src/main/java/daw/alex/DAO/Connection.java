@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package daw.alex.DAO;
 
 import com.mongodb.MongoClient;
@@ -18,11 +13,11 @@ public class Connection {
     private String db;
     private MongoClient client;
     private MongoDatabase database;
-    private MongoCollection<Document> collection;
+    public MongoCollection<Document> collection;
     
 
     public Connection(String db) {
-        this.db = db; 
+        this.db = db;
     }
     
     public void setCollection(String collection) {
@@ -33,6 +28,7 @@ public class Connection {
         this.collection = database.getCollection(collection);
         return this.collection;
     }
+    
 
     public void open() {
         client = new MongoClient();

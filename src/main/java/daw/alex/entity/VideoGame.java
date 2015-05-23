@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package daw.alex.entity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -18,6 +14,7 @@ import java.util.List;
 public class VideoGame {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
     
+    private int id;
     private String name;
     private List<String> types;
     private List<String> platform;
@@ -27,6 +24,15 @@ public class VideoGame {
     public VideoGame() {
         types = new ArrayList();
         platform = new ArrayList();
+        launchdate = new GregorianCalendar();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(double id) {
+        this.id = (int) id;
     }
 
     public String getName() {
