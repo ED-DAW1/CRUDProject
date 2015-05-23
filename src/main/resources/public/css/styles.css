@@ -2,14 +2,22 @@
 	width: 100%;
 	text-align: left;
 	padding-left: 1em;
-	border-bottom: 1em solid black;
+	border-bottom: 1em solid gray;
 }
 
 #container {
+	padding:1em;
+	margin-right: 1em;
+}
 
+#content {
+	float:left;
+	width: 92%;
+	padding-left:2em;
+}
 
-
-
-
-
+#menu {
+	width: 8%;
+	height: 100%;
+	float:left;
 }
