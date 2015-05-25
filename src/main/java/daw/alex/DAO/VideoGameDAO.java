@@ -19,7 +19,7 @@ public class VideoGameDAO {
         db.setCollection(coleccion);
         List<VideoGame> games = new ArrayList();
         
-        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page).iterator();
+        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page*20).iterator();
         while (cursor.hasNext()) {
             games.add(docToClass(cursor.next()));
         }
@@ -76,5 +76,5 @@ public class VideoGameDAO {
                 .append("launchdate", game.getLaunchdate())
                 .append("webpage", game.getWebPage());
     }
-     
+    
 }
