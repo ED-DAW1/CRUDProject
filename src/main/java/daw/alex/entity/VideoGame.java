@@ -14,7 +14,7 @@ import java.util.List;
 public class VideoGame {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
     
-    private int id;
+    private double id;
     private String name;
     private List<String> types;
     private List<String> platform;
@@ -27,12 +27,12 @@ public class VideoGame {
         launchdate = new GregorianCalendar();
     }
 
-    public int getId() {
+    public double getId() {
         return id;
     }
 
     public void setId(double id) {
-        this.id = (int) id;
+        this.id = id;
     }
 
     public String getName() {

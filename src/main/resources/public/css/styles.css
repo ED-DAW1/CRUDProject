@@ -17,7 +17,8 @@
 }
 
 #menu {
+	display:block;
+	float:left;
 	width: 8%;
 	height: 100%;
-	float:left;
 }

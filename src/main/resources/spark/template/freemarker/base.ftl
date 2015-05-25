@@ -25,7 +25,7 @@
 			<div id="container">
 				<div id="menu">
 					<ul class="nav nav-pills nav-stacked">
-						<@menu />
+                                        <@menu />
 					</ul>
 				</div>
 				<div id="content">

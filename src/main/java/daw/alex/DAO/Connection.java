@@ -13,29 +13,29 @@ public class Connection {
     private String db;
     private MongoClient client;
     private MongoDatabase database;
-    public MongoCollection<Document> collection;
+    protected MongoCollection<Document> collection;
     
 
-    public Connection(String db) {
+    Connection(String db) {
         this.db = db;
     }
     
-    public void setCollection(String collection) {
+    protected void setCollection(String collection) {
         this.collection = database.getCollection(collection);
     }
 
-    public MongoCollection<Document> collection(String collection) {
+    protected MongoCollection<Document> collection(String collection) {
         this.collection = database.getCollection(collection);
         return this.collection;
     }
     
 
-    public void open() {
+    protected void open() {
         client = new MongoClient();
         database = client.getDatabase(db);
     }
     
-    public void close() {
+    protected void close() {
         if (client!=null) client.close();
     }
     
