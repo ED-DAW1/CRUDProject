@@ -21,16 +21,9 @@ public class VideoGameDAO {
         
         MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page).iterator();
         while (cursor.hasNext()) {
-            Document d = cursor.next();
-            VideoGame tmp = new VideoGame();
-            tmp.setId((d.getDouble("_id")));
-            tmp.setName(d.getString("name"));
-            tmp.setTypes((List<String>) d.get("types"));
-            tmp.setPlatform((List<String>) d.get("platform"));
-            tmp.setLaunchdate(d.getString("launchdate"));
-            tmp.setWebPage(d.getString("webpage"));
-            games.add(tmp);
+            games.add(docToClass(cursor.next()));
         }
+        db.close();
         return games;
     }
     
@@ -45,15 +38,43 @@ public class VideoGameDAO {
         db.open();
         db.setCollection(coleccion);
 
-        db.collection.insertOne(
-                new Document("_id",game.getId())
-                        .append("name",game.getName())
-                        .append("types",game.getTypes())
-                        .append("platform",game.getPlatform())
-                        .append("launchdate",game.getLaunchdate())
-                        .append("webpage",game.getWebPage())
-        );
-
+        db.collection.insertOne(classToDoc(game));
+        db.close();
     }
     
+    public static void borrar(String coleccion,Double id) {
+        db.open();
+        db.setCollection(coleccion);
+        
+        db.collection.deleteOne(eq("_id",id));
+        db.close();
+    }
+    
+    public static void actualizar(String coleccion,VideoGame game) {
+        db.open();
+        db.setCollection(coleccion);
+        
+        db.collection.replaceOne(eq(":id",game.getId()),classToDoc(game));
+    }
+    
+    private static VideoGame docToClass(Document doc) {
+        VideoGame tmp = new VideoGame();
+            tmp.setId((doc.getDouble("_id")));
+            tmp.setName(doc.getString("name"));
+            tmp.setTypes((List<String>) doc.get("types"));
+            tmp.setPlatform((List<String>) doc.get("platform"));
+            tmp.setLaunchdate(doc.getString("launchdate"));
+            tmp.setWebPage(doc.getString("webpage"));
+        return tmp;
+    }
+    
+    private static Document classToDoc(VideoGame game) {
+        return new Document("_id", game.getId())
+                .append("name", game.getName())
+                .append("types", game.getTypes())
+                .append("platform", game.getPlatform())
+                .append("launchdate", game.getLaunchdate())
+                .append("webpage", game.getWebPage());
+    }
+     
 }

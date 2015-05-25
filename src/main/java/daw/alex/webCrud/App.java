@@ -15,6 +15,7 @@ public class App {
     public static void main( String[] args ) {
         Spark.staticFileLocation("/public");
         
+        
         get(new FreeMarkerRoute("/") {
             
             @Override
