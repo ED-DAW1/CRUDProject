@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  *
@@ -16,8 +15,8 @@ public class VideoGame {
     
     private double id;
     private String name;
-    private List<String> types;
-    private List<String> platform;
+    private ArrayList<String> types;
+    private ArrayList<String> platform;
     private Calendar launchdate;
     private String webPage;
 
@@ -26,42 +25,67 @@ public class VideoGame {
         platform = new ArrayList();
         launchdate = new GregorianCalendar();
     }
+    
+    //Freemarker Getters
 
     public double getId() {
         return id;
     }
+    
+    public String getName() {
+        return name;
+    }
+
+    public String getTypes() {
+        return types.toString();
+    }
+    
+    public String getPlatform() {
+        return platform.get(0);
+    }
+    
+     public String getLaunchdate() {
+        return dateFormat.format(launchdate.getTime());
+    }
+
+    public String getWebPage() {
+        return webPage;
+    }
+    
+    
+    //Array Internal Getters
+
+    public ArrayList<String> getArrayTypes() {
+        return types;
+    }
+    
+    
+    public ArrayList<String> getArrayPlatform() {
+        return platform;
+    }
+    
+    //Setters
 
     public void setId(double id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public List<String> getTypes() {
-        return types;
-    }
 
-    public void setTypes(List<String> types) {
+    public void setTypes(ArrayList<String> types) {
         this.types = types;
     }
 
-    public List<String> getPlatform() {
-        return platform;
-    }
 
-    public void setPlatform(List<String> platform) {
+    public void setPlatform(ArrayList<String> platform) {
         this.platform = platform;
     }
 
-    public String getLaunchdate() {
-        return dateFormat.format(launchdate.getTime());
-    }
+   
 
     public void setLaunchdate(String launchdate) {
         try {
@@ -71,9 +95,7 @@ public class VideoGame {
         }
     }
     
-    public String getWebPage() {
-        return webPage;
-    }
+
     
     public void setWebPage(String webPage) {
         this.webPage = webPage;

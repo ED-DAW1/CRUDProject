@@ -1,10 +1,9 @@
 package daw.alex.DAO;
 
 import com.mongodb.client.MongoCursor;
-import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.eq;
 import daw.alex.entity.VideoGame;
 import java.util.ArrayList;
-import java.util.List;
 import org.bson.Document;
 
 /**
@@ -14,14 +13,14 @@ import org.bson.Document;
 public class VideoGameDAO {
     static Connection db = new Connection("videogames");
     
-    public static List<VideoGame> pagina(String coleccion,int page) {
+    public static ArrayList<VideoGame> pagina(String coleccion,int page) {
         db.open();
         db.setCollection(coleccion);
-        List<VideoGame> games = new ArrayList();
+        ArrayList<VideoGame> games = new ArrayList();
         
-        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page*20).iterator();
-        while (cursor.hasNext()) {
-            games.add(docToClass(cursor.next()));
+        //MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page*20).iterator();
+        for (Document doc : db.collection.find().into(new ArrayList<Document>())) {
+            games.add(docToClass(doc));
         }
         db.close();
         return games;
@@ -54,15 +53,15 @@ public class VideoGameDAO {
         db.open();
         db.setCollection(coleccion);
         
-        db.collection.replaceOne(eq(":id",game.getId()),classToDoc(game));
+        db.collection.replaceOne(eq("_id",game.getId()),classToDoc(game));
     }
     
     private static VideoGame docToClass(Document doc) {
         VideoGame tmp = new VideoGame();
             tmp.setId((doc.getDouble("_id")));
             tmp.setName(doc.getString("name"));
-            tmp.setTypes((List<String>) doc.get("types"));
-            tmp.setPlatform((List<String>) doc.get("platform"));
+            tmp.setTypes((ArrayList<String>) doc.get("types"));
+            tmp.setPlatform((ArrayList<String>) doc.get("platform"));
             tmp.setLaunchdate(doc.getString("launchdate"));
             tmp.setWebPage(doc.getString("webpage"));
         return tmp;
@@ -71,8 +70,8 @@ public class VideoGameDAO {
     private static Document classToDoc(VideoGame game) {
         return new Document("_id", game.getId())
                 .append("name", game.getName())
-                .append("types", game.getTypes())
-                .append("platform", game.getPlatform())
+                .append("types", game.getArrayTypes())
+                .append("platform", game.getArrayPlatform())
                 .append("launchdate", game.getLaunchdate())
                 .append("webpage", game.getWebPage());
     }

@@ -19,14 +19,15 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	    <td></td>
-	    <td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	    </tr>
+	  	<#list games as game>
+		    <tr>
+		    	<td>${game.name}</td>
+		    	<td>${game.types}</td>
+		    	<td>${game.platform}</td>
+		    	<td>${game.launchdate}</td>
+		    	<td>${game.webPage}</td>
+		    </tr>
+		</#list>
 	  </tbody>
 	</table> 
 </#macro>

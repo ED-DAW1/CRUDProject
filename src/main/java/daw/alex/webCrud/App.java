@@ -1,6 +1,9 @@
 package daw.alex.webCrud;
 
 import daw.alex.DAO.VideoGameDAO;
+import daw.alex.entity.VideoGame;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import spark.ModelAndView;
@@ -32,9 +35,19 @@ public class App {
 
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
-                data.put("games",VideoGameDAO.pagina("game",Integer.parseInt(rqst.params(":page"))));
+                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
                 return modelAndView(data,"index.ftl");
             }
+        });
+        
+        get(new FreeMarkerRoute("/add/:newid") {
+
+            @Override
+            public ModelAndView handle(Request rqst, Response rspns) {
+                //TO DO
+                return modelAndView(data,"index.ftl");
+            }
+            
         });
         
     
