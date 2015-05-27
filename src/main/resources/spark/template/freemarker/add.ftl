@@ -39,8 +39,10 @@
 			</tr>
 	  </tbody>
 	</table> 
+	<p class="text-danger" style="display:${error}">Alguno de los compos introducidos esta vacio</p>
 	<input type="submit" value="Guardar" class="btn btn-primary"/>
 </form>
+
 </#macro>
 
 <@display_page />

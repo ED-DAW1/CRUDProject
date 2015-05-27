@@ -45,7 +45,6 @@ public class VideoGameDAO {
         db.open();
         db.setCollection(coleccion);
         
-        if (game.getName()=="" || game.get)
         db.collection.insertOne(classToDoc(game));
         db.close();
     }

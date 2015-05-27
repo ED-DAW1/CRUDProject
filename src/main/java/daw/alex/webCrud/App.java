@@ -23,10 +23,12 @@ public class App {
         Spark.staticFileLocation("/public");
         final Map<String,Object> data = new HashMap<>();
         
+        
         get(new FreeMarkerRoute("/") {
             
             @Override
             public Object handle(Request rqst, Response rspns) {
+                
                 rspns.redirect("/show/0");
                 return null;
             }
@@ -37,6 +39,7 @@ public class App {
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
                 data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
+                data.put("error","none");
                 return modelAndView(data,"index.ftl");
             }
         });
@@ -57,6 +60,11 @@ public class App {
 
             @Override
             public Object handle(Request rqst, Response rspns) {
+                try {
+                    for(String s:rqst.queryParams()) {
+                        if (rqst.queryParams(s).equals("")) throw new IllegalArgumentException();
+                    };
+                data.put("error","none");
                 VideoGame game = new VideoGame();
                 game.setId(Double.parseDouble(rqst.params(":newid")));
                 game.setName(rqst.queryParams("name"));
@@ -66,7 +74,9 @@ public class App {
                 for (String s:rqst.queryParams("platform").split(",")) game.addPlatform(s);
 
                 VideoGameDAO.añadir("games",game);
-                
+                } catch (IllegalArgumentException ex) {
+                    data.put("error","block");
+                }
                 data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":newid"))/20));
                 rspns.redirect("/add");
                 return null;
