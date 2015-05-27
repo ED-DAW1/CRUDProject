@@ -37,11 +37,11 @@ public class VideoGame {
     }
 
     public String getTypes() {
-        return types.toString();
+        return types.toString().substring(1,types.toString().length()-1);
     }
     
     public String getPlatform() {
-        return platform.get(0);
+        return platform.toString().substring(1,platform.toString().length()-1);
     }
     
      public String getLaunchdate() {
@@ -79,10 +79,18 @@ public class VideoGame {
     public void setTypes(ArrayList<String> types) {
         this.types = types;
     }
+    
+    public void addTypes(String type) {
+        this.types.add(type);
+    }
 
 
     public void setPlatform(ArrayList<String> platform) {
         this.platform = platform;
+    }
+    
+    public void addPlatform(String platform) {
+        this.platform.add(platform);
     }
 
    

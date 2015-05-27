@@ -18,10 +18,11 @@ public class VideoGameDAO {
         db.setCollection(coleccion);
         ArrayList<VideoGame> games = new ArrayList();
         
-        //MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page*20).iterator();
-        for (Document doc : db.collection.find().into(new ArrayList<Document>())) {
-            games.add(docToClass(doc));
+        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page*20).iterator();
+        while (cursor.hasNext()) {
+            games.add(docToClass(cursor.next()));
         }
+        
         db.close();
         return games;
     }
@@ -29,14 +30,22 @@ public class VideoGameDAO {
     public static double nextID(String coleccion) {
         db.open();
         db.setCollection(coleccion);
-       
-        return 1 + db.collection.find().sort(eq("_id",-1)).first().getDouble("_id");
+        
+        double id;
+        try {
+        id=1 + db.collection.find().sort(eq("_id",-1)).first().getDouble("_id");
+        } catch (NullPointerException ex) {
+            id=1;
+        }
+        return id;
+        
     }
     
     public static void añadir(String coleccion,VideoGame game) {
         db.open();
         db.setCollection(coleccion);
-
+        
+        if (game.getName()=="" || game.get)
         db.collection.insertOne(classToDoc(game));
         db.close();
     }

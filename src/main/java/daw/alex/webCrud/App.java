@@ -11,6 +11,7 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 import static spark.Spark.get;
+import static spark.Spark.post;
 import spark.template.freemarker.FreeMarkerRoute;
 
 /**
@@ -40,12 +41,35 @@ public class App {
             }
         });
         
-        get(new FreeMarkerRoute("/add/:newid") {
+        
+        get(new FreeMarkerRoute("/add") {
 
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
-                //TO DO
-                return modelAndView(data,"index.ftl");
+                data.put("id",VideoGameDAO.nextID("games"));
+                data.put("games",VideoGameDAO.pagina("games", (int) (VideoGameDAO.nextID("games")/20)));
+                return modelAndView(data,"add.ftl");
+            }
+            
+        });
+        
+        post(new FreeMarkerRoute("/add/:newid") {
+
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+                VideoGame game = new VideoGame();
+                game.setId(Double.parseDouble(rqst.params(":newid")));
+                game.setName(rqst.queryParams("name"));
+                game.setLaunchdate(rqst.queryParams("launchdate"));
+                game.setWebPage(rqst.queryParams("webPage"));
+                for (String s:rqst.queryParams("types").split(",")) game.addTypes(s);
+                for (String s:rqst.queryParams("platform").split(",")) game.addPlatform(s);
+
+                VideoGameDAO.añadir("games",game);
+                
+                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":newid"))/20));
+                rspns.redirect("/add");
+                return null;
             }
             
         });

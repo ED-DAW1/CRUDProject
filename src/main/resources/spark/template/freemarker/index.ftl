@@ -1,10 +1,10 @@
 <#include "base.ftl">
 
 <#macro menu>
-	<li class="active"><a href="#">Consultrar</a></li>
-	<li><a href="#">Añadir</a></li>
-	<li><a href="#">Editar</a></li>
-	<li><a href="#">Borrar</a></li>
+	<li class="active"><a href="/">Consultrar</a></li>
+	<li><a href="/add">Añadir</a></li>
+	<li><a href="/edit">Editar</a></li>
+	<li><a href="/delete">Borrar</a></li>
 </#macro>
 
 <#macro content>
