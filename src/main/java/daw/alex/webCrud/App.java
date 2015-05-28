@@ -2,8 +2,6 @@ package daw.alex.webCrud;
 
 import daw.alex.DAO.VideoGameDAO;
 import daw.alex.entity.VideoGame;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import spark.ModelAndView;
@@ -39,7 +37,7 @@ public class App {
 
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
-                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
+                data.put("games",VideoGameDAO.pagina(Integer.parseInt(rqst.params(":page"))));
                 data.put("error","none");
                 data.put("error2","none");
                 return modelAndView(data,"index.ftl");
@@ -54,9 +52,8 @@ public class App {
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
                 data.put("error2","none");
-                data.put("id",VideoGameDAO.nextID("games"));
-                data.put("games",VideoGameDAO.pagina("games",
-                        (int) (VideoGameDAO.contar("games")/5)));
+                data.put("id",VideoGameDAO.nextID());
+                data.put("games",VideoGameDAO.pagina((int) (VideoGameDAO.contar()/10)));
                 return modelAndView(data,"add.ftl");
             }
             
@@ -69,7 +66,7 @@ public class App {
             try {
                 queryCheck(rqst);
                 data.put("error","none");
-                VideoGameDAO.añadir("games",queryToClass(rqst,rqst.params(":newid")));
+                VideoGameDAO.añadir(queryToClass(rqst,rqst.params(":newid")));
             } catch (IllegalArgumentException ex) {
                 data.put("error","block");
             }
@@ -87,27 +84,27 @@ public class App {
             public Object handle(Request rqst, Response rspns) {
                 data.put("error","none");
                 data.put("error2","none");
-                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
+                data.put("games",VideoGameDAO.pagina(Integer.parseInt(rqst.params(":page"))));
                 return modelAndView(data,"del.ftl");
             }
         });
         
-        get(new FreeMarkerRoute("/delete/all") {
+        get(new FreeMarkerRoute("/deleteall") {
             
             @Override
             public Object handle(Request rqst, Response rspns) {
-                VideoGameDAO.truncar("games");
+                VideoGameDAO.truncar();
                 rspns.redirect("/");
                 return null;
             }
         });
         
-        get(new FreeMarkerRoute("/delete/:id") {
+        get(new FreeMarkerRoute("/delete/id/:id") {
 
             @Override
             public Object handle(Request rqst, Response rspns) {
-                VideoGameDAO.borrar("games",Double.parseDouble(rqst.params(":id")));
-                rspns.redirect("/delete");
+                VideoGameDAO.borrar(Double.parseDouble(rqst.params(":id")));
+                rspns.redirect("/delete/0");
                 return null;
             }
         }); 
@@ -119,7 +116,7 @@ public class App {
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
                 data.put("error","none");
-                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
+                data.put("games",VideoGameDAO.pagina(Integer.parseInt(rqst.params(":page"))));
                 return modelAndView(data,"edit.ftl");            
             }
         });
@@ -131,7 +128,7 @@ public class App {
             try {
                 queryCheck(rqst);
                 data.put("error2","none");
-                VideoGameDAO.actualizar("games",queryToClass(rqst,rqst.params(":id")));
+                VideoGameDAO.actualizar(queryToClass(rqst,rqst.params(":id")));
             }catch (IllegalArgumentException ex) {
                 data.put("error2","block");
             }
@@ -147,7 +144,7 @@ public class App {
             @Override
             public Object handle(Request rqst, Response rspns) {
                 int p = Integer.parseInt(rqst.params(":page"));
-                if ((double) VideoGameDAO.contar("games")/5 >p+1) {
+                if ((double) VideoGameDAO.contar()/10 >p+1) {
                     data.put("page",p+1);
                     rspns.redirect("/" +rqst.splat()[0] +"/" +(p+1));
                 } else {
@@ -170,12 +167,7 @@ public class App {
                 }
                 return null;
             }
-        });
-        
-        
-
-        
-       
+        });    
     }
             
     private static void queryCheck(Request rqst) throws IllegalArgumentException{

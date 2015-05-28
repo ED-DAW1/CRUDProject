@@ -25,7 +25,7 @@
 	  	<#list games as game>
 
 	    <tr>
-	    	<td class="selectbtn"><a href="/delete/${game.id}" class="btn btn-danger btn-xs" /></td>
+	    	<td class="selectbtn"><a href="/delete/id/${game.id}" class="btn btn-danger btn-xs" /></td>
 	    	<td>${game.name}</td>
 	    	<td>${game.types}</td>
 	    	<td>${game.platform}</td>
@@ -40,7 +40,7 @@
 	  <li><a href="prev/${page}">Previous</a></li>
 	  <li><a href="next/${page}">Next</a></li>
 	</ul>
-	<a href="/delete/all" class="btn btn-danger" style="float:right">Todo</a>
+	<a href="/deleteall" class="btn btn-danger" style="float:right">Todo</a>
 </#macro>
 
 <@display_page />

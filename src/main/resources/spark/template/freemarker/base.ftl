@@ -32,7 +32,9 @@
 					<@content />
 				</div>
 			</div>	
-	
+		<div id ="footer">
+			<p>Creado por Alex Valencia Gallego</p>
+		</div>
 		</body>
 	</html>
 </#macro>

@@ -14,12 +14,12 @@ public class VideoGameDAO {
     static Connection db = new Connection("videogames");
     static String coleccion = "games";
     
-    public static ArrayList<VideoGame> pagina(String coleccion,int page) {
+    public static ArrayList<VideoGame> pagina(int page) {
         db.open();
         db.setCollection(coleccion);
         ArrayList<VideoGame> games = new ArrayList();
         
-        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(5).skip(page*5).iterator();
+        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(10).skip(page*10).iterator();
         while (cursor.hasNext()) {
             games.add(docToClass(cursor.next()));
         }
@@ -28,7 +28,7 @@ public class VideoGameDAO {
         return games;
     }
     
-    public static double nextID(String coleccion) {
+    public static double nextID() {
         db.open();
         db.setCollection(coleccion);
         
@@ -42,7 +42,7 @@ public class VideoGameDAO {
         
     }
     
-    public static void añadir(String coleccion,VideoGame game) {
+    public static void añadir(VideoGame game) {
         db.open();
         db.setCollection(coleccion);
         
@@ -50,7 +50,7 @@ public class VideoGameDAO {
         db.close();
     }
     
-    public static void borrar(String coleccion,Double id) {
+    public static void borrar(Double id) {
         db.open();
         db.setCollection(coleccion);
         
@@ -58,7 +58,7 @@ public class VideoGameDAO {
         db.close();
     }
     
-    public static void truncar(String coleccion) {
+    public static void truncar() {
         db.open();
         db.setCollection(coleccion);
         
@@ -66,14 +66,14 @@ public class VideoGameDAO {
         db.close();
     }
     
-    public static void actualizar(String coleccion,VideoGame game) {
+    public static void actualizar(VideoGame game) {
         db.open();
         db.setCollection(coleccion);
         
         db.collection.replaceOne(eq("_id",game.getId()),classToDoc(game));
     }
     
-    public static long contar(String coleccion) {
+    public static long contar() {
         db.open();
         db.setCollection(coleccion);
         
