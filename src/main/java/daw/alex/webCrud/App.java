@@ -23,12 +23,13 @@ public class App {
         Spark.staticFileLocation("/public");
         final Map<String,Object> data = new HashMap<>();
         
+        //Consultar
         
         get(new FreeMarkerRoute("/") {
             
             @Override
             public Object handle(Request rqst, Response rspns) {
-                
+                data.put("page",0);
                 rspns.redirect("/show/0");
                 return null;
             }
@@ -40,17 +41,22 @@ public class App {
             public ModelAndView handle(Request rqst, Response rspns) {
                 data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
                 data.put("error","none");
+                data.put("error2","none");
                 return modelAndView(data,"index.ftl");
             }
         });
+        
+        //Añadir 
         
         
         get(new FreeMarkerRoute("/add") {
 
             @Override
             public ModelAndView handle(Request rqst, Response rspns) {
+                data.put("error2","none");
                 data.put("id",VideoGameDAO.nextID("games"));
-                data.put("games",VideoGameDAO.pagina("games", (int) (VideoGameDAO.nextID("games")/20)));
+                data.put("games",VideoGameDAO.pagina("games",
+                        (int) (VideoGameDAO.contar("games")/5)));
                 return modelAndView(data,"add.ftl");
             }
             
@@ -60,30 +66,138 @@ public class App {
 
             @Override
             public Object handle(Request rqst, Response rspns) {
-                try {
-                    for(String s:rqst.queryParams()) {
-                        if (rqst.queryParams(s).equals("")) throw new IllegalArgumentException();
-                    };
+            try {
+                queryCheck(rqst);
                 data.put("error","none");
-                VideoGame game = new VideoGame();
-                game.setId(Double.parseDouble(rqst.params(":newid")));
-                game.setName(rqst.queryParams("name"));
-                game.setLaunchdate(rqst.queryParams("launchdate"));
-                game.setWebPage(rqst.queryParams("webPage"));
-                for (String s:rqst.queryParams("types").split(",")) game.addTypes(s);
-                for (String s:rqst.queryParams("platform").split(",")) game.addPlatform(s);
-
-                VideoGameDAO.añadir("games",game);
-                } catch (IllegalArgumentException ex) {
-                    data.put("error","block");
-                }
-                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":newid"))/20));
+                VideoGameDAO.añadir("games",queryToClass(rqst,rqst.params(":newid")));
+            } catch (IllegalArgumentException ex) {
+                data.put("error","block");
+            }
                 rspns.redirect("/add");
                 return null;
             }
             
         });
         
+        //Borrar
+        
+        get(new FreeMarkerRoute("/delete/:page") {
+            
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+                data.put("error","none");
+                data.put("error2","none");
+                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
+                return modelAndView(data,"del.ftl");
+            }
+        });
+        
+        get(new FreeMarkerRoute("/delete/all") {
+            
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+                VideoGameDAO.truncar("games");
+                rspns.redirect("/");
+                return null;
+            }
+        });
+        
+        get(new FreeMarkerRoute("/delete/:id") {
+
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+                VideoGameDAO.borrar("games",Double.parseDouble(rqst.params(":id")));
+                rspns.redirect("/delete");
+                return null;
+            }
+        }); 
+        
+        //Editar
+        
+        get(new FreeMarkerRoute("/edit/:page") {
+            
+            @Override
+            public ModelAndView handle(Request rqst, Response rspns) {
+                data.put("error","none");
+                data.put("games",VideoGameDAO.pagina("games",Integer.parseInt(rqst.params(":page"))));
+                return modelAndView(data,"edit.ftl");            
+            }
+        });
+        
+        post(new FreeMarkerRoute("/edit/id/:id") {
+            
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+            try {
+                queryCheck(rqst);
+                data.put("error2","none");
+                VideoGameDAO.actualizar("games",queryToClass(rqst,rqst.params(":id")));
+            }catch (IllegalArgumentException ex) {
+                data.put("error2","block");
+            }
+                rspns.redirect("/edit/0");
+                return null;
+            }
+        });
+        
+        //Paginadores
+        
+        get(new FreeMarkerRoute("/*/next/:page") {
+
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+                int p = Integer.parseInt(rqst.params(":page"));
+                if ((double) VideoGameDAO.contar("games")/5 >p+1) {
+                    data.put("page",p+1);
+                    rspns.redirect("/" +rqst.splat()[0] +"/" +(p+1));
+                } else {
+                    rspns.redirect("/" +rqst.splat()[0] +"/" +p);
+                }
+                return null;
+            }
+        });
+        
+        get(new FreeMarkerRoute("/*/prev/:page") {
+
+            @Override
+            public Object handle(Request rqst, Response rspns) {
+                int p = Integer.parseInt(rqst.params(":page"));
+                if (p>0) {
+                    data.put("page",p-1);
+                    rspns.redirect("/" +rqst.splat()[0] +"/" +(p-1));
+                } else {
+                    rspns.redirect("/" +rqst.splat()[0] +"/" +p);
+                }
+                return null;
+            }
+        });
+        
+        
+
+        
+       
+    }
+            
+    private static void queryCheck(Request rqst) throws IllegalArgumentException{
+        for (String s : rqst.queryParams()) {
+            if (rqst.queryParams(s).equals("")) {
+                throw new IllegalArgumentException("Consulta con campos vacios");
+            }
+        };
+    }
     
+    private static VideoGame queryToClass(Request rqst,String id) {
+        VideoGame game = new VideoGame();
+        
+        game.setId(Double.parseDouble(id));
+        game.setName(rqst.queryParams("name"));
+        game.setLaunchdate(rqst.queryParams("launchdate"));
+        game.setWebPage(rqst.queryParams("webPage"));
+        for (String s:rqst.queryParams("types").split(",")) game.addTypes(s);
+        for (String s:rqst.queryParams("platform").split(",")) game.addPlatform(s);
+        
+        return game;
     }
 }
+
+

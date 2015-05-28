@@ -3,8 +3,8 @@
 <#macro menu>
 	<li><a href="/">Consultrar</a></li>
 	<li class="active"><a href="/add">Añadir</a></li>
-	<li><a href="/edit">Editar</a></li>
-	<li><a href="/delete">Borrar</a></li>
+	<li><a href="/edit/0">Editar</a></li>
+	<li><a href="/delete/0">Borrar</a></li>
 </#macro>
 
 <#macro content>
@@ -39,7 +39,7 @@
 			</tr>
 	  </tbody>
 	</table> 
-	<p class="text-danger" style="display:${error}">Alguno de los compos introducidos esta vacio</p>
+	<p class="text-danger" style="display:${error}">Alguno de los compos introducidos estaba vacio</p>
 	<input type="submit" value="Guardar" class="btn btn-primary"/>
 </form>
 

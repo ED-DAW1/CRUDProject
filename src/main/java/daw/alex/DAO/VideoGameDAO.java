@@ -12,13 +12,14 @@ import org.bson.Document;
  */
 public class VideoGameDAO {
     static Connection db = new Connection("videogames");
+    static String coleccion = "games";
     
     public static ArrayList<VideoGame> pagina(String coleccion,int page) {
         db.open();
         db.setCollection(coleccion);
         ArrayList<VideoGame> games = new ArrayList();
         
-        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(20).skip(page*20).iterator();
+        MongoCursor<Document> cursor = db.collection.find().sort(eq("name",1)).limit(5).skip(page*5).iterator();
         while (cursor.hasNext()) {
             games.add(docToClass(cursor.next()));
         }
@@ -57,11 +58,28 @@ public class VideoGameDAO {
         db.close();
     }
     
+    public static void truncar(String coleccion) {
+        db.open();
+        db.setCollection(coleccion);
+        
+        db.collection.drop();
+        db.close();
+    }
+    
     public static void actualizar(String coleccion,VideoGame game) {
         db.open();
         db.setCollection(coleccion);
         
         db.collection.replaceOne(eq("_id",game.getId()),classToDoc(game));
+    }
+    
+    public static long contar(String coleccion) {
+        db.open();
+        db.setCollection(coleccion);
+        
+        long c = db.collection.count();
+        db.close();
+        return c;
     }
     
     private static VideoGame docToClass(Document doc) {
