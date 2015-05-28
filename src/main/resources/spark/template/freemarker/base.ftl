@@ -25,16 +25,17 @@
 			<div id="container">
 				<div id="menu">
 					<ul class="nav nav-pills nav-stacked">
-                        <@menu />
+						<@menu />
 					</ul>
 				</div>
 				<div id="content">
 					<@content />
 				</div>
-			</div>	
-		<div id ="footer">
-			<p>Creado por Alex Valencia Gallego</p>
-		</div>
+			</div>
+			<div id ="footer">
+				<p>Creado por Alex Valencia</p>
+			</div>
+
 		</body>
 	</html>
 </#macro>
