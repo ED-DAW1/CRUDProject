@@ -60,7 +60,7 @@ public class Connection {
         //db = System.getenv("OPENSHIFT_APP_NAME");
         String username = System.getenv("OPENSHIFT_MONGODB_DB_USERNAME");
         String password = System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD");
-        MongoCredential credential = MongoCredential.createCredential(username,db, password.toCharArray());
+        MongoCredential credential = MongoCredential.createCredential(username,"admin", password.toCharArray());
         return new MongoClient(new ServerAddress(host, port), Arrays.asList(credential));
     }
     
