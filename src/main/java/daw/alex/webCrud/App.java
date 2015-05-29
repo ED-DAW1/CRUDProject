@@ -17,9 +17,24 @@ import spark.template.freemarker.FreeMarkerRoute;
  * CRUD de Videojuegos.
  */
 public class App {
+    //Localizar el servidor en el que ejecutarse
+    //Direccion IP
+    private static final String IP_ADDRESS = 
+            System.getenv("OPENSHIFT_DIY_IP") != null ? 
+            System.getenv("OPENSHIFT_DIY_IP") : "localhost";
+    //Puerto
+    private static final int PORT = 
+            System.getenv("OPENSHIFT_DIY_PORT") != null ? 
+            Integer.parseInt(System.getenv("OPENSHIFT_DIY_PORT")) : 4567;
+    
     public static void main( String[] args ) {
+        Spark.setIpAddress(IP_ADDRESS);
+        Spark.setPort(PORT);
         Spark.staticFileLocation("/public");
         final Map<String,Object> data = new HashMap<>();
+        
+        //Arrancar la base de datos en la coleccion correspondiente a videogame
+        VideoGameDAO.start();
         
         //Consultar
         
@@ -167,7 +182,8 @@ public class App {
                 }
                 return null;
             }
-        });    
+        });
+
     }
             
     private static void queryCheck(Request rqst) throws IllegalArgumentException{
